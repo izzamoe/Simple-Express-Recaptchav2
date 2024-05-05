@@ -1,5 +1,6 @@
 import {PrismaClient} from "@prisma/client";
 // import { Recaptcha } from 'express-recaptcha';
+import bcrypt from 'bcrypt';
 import pkg from 'express-recaptcha';
 const { RecaptchaV2 } = pkg;
 const recaptcha = new RecaptchaV2('6LfVONEpAAAAAIv4Ai5UWkHKjhD2SkweguNwGJm5', '6LfVONEpAAAAACkZxeqjf33p76Lbm9ye763LLdN9');
@@ -17,10 +18,11 @@ export function showCreateUserForm(req, res) {
 
 export async function createUser(req, res) {
     const { username, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
     await prisma.user.create({
         data: {
             username,
-            password: password,
+            password: hashedPassword,
             createTime: new Date(),
         },
     });
@@ -34,11 +36,12 @@ export async function showEditUserForm(req, res) {
 
 export async function editUser(req, res) {
     const { username, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
     await prisma.user.update({
         where: { id: req.params.id },
         data: {
             username,
-            password: password,
+            password: hashedPassword,
         },
     });
     res.redirect('/users');
@@ -56,10 +59,9 @@ export function showLoginForm(req, res) {
 export async function login(req, res) {
     recaptcha.verify(req, async function (error) {
         if (!error) {
-            // add your existing login code here
             const {username, password} = req.body;
             const user = await prisma.user.findUnique({where: {username}});
-            if (user && password === user.password) {
+            if (user && await bcrypt.compare(password, user.password)) {
                 req.session.user = user;
                 res.redirect('/users');
             } else {
