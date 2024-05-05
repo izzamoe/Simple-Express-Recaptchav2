@@ -18,6 +18,10 @@ export function showCreateUserForm(req, res) {
 
 export async function createUser(req, res) {
     const { username, password } = req.body;
+    if (password.length < 5 || password.length > 8) {
+        res.render('createUser', { message: 'Password must be between 5 and 8 characters.' });
+        return;
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
     await prisma.user.create({
         data: {
@@ -36,6 +40,11 @@ export async function showEditUserForm(req, res) {
 
 export async function editUser(req, res) {
     const { username, password } = req.body;
+    if (password.length < 5 || password.length > 8) {
+        const user = await prisma.user.findUnique({ where: { id: req.params.id } });
+        res.render('editUser', { user, message: 'Password must be between 5 and 8 characters.' });
+        return;
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
     await prisma.user.update({
         where: { id: req.params.id },
