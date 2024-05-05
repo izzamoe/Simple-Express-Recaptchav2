@@ -1,0 +1,31 @@
+{
+  "name": "tugas2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prisma": "^5.13.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.13.0",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-recaptcha": "^5.1.0",
+    "express-session": "^1.18.0"
+  },
+  "prisma": {
+    "seed": "bun prisma/seed.js"
+  }
+}

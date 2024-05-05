@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <style>
+        form {
+            border: 2px solid #000;
+            padding: 20px;
+            width: 300px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<h2>Login</h2>
+<form action="/login" method="post" style="border: 1px solid black; padding: 10px;">
+    <% if (message) { %>
+        <p><%= message %></p>
+    <% } %>
+    <label for="username">Username:</label><br>
+    <input type="text" id="username" name="username" required><br>
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" name="password" required><br>
+    <%- captcha %>
+    <input type="submit" value="Login">
+</form>
+</body>
+</html>
